@@ -276,6 +276,7 @@
             height: 100%;
             border-radius: 50%;
             box-shadow: 0 0 20px var(--gold);
+            transition: transform 3s cubic-bezier(0.15, 0.85, 0.15, 1);
         }
 
         .pointer {
@@ -519,27 +520,6 @@
     </div>
 
     <script>
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-        function playSpinSound() {
-            try {
-                if (audioCtx.state === 'suspended') audioCtx.resume();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.05);
-                
-                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-                gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
-            } catch (e) {}
-        }
-
         const stands = [
             { name: "TUSK ACT 4", power: "Habilidad: Rotación Infinita que atraviesa dimensiones. ¡Nada te detendrá a los 17!" },
             { name: "BALL BREAKER", power: "Habilidad: Dominio de la Técnica Zeppeli. Rompe cualquier obstáculo en tu camino." },
@@ -552,7 +532,7 @@
         const canvas = document.getElementById("wheel");
         const ctx = canvas.getContext("2d");
         const colors = ["#dfa837", "#8b1e1e", "#0b3c5d", "#d81b60", "#2e7d32", "#6a1b9a"];
-        let startAngle = 0;
+        let currentDeg = 0;
         let isSpinning = false;
 
         function drawWheel() {
@@ -561,7 +541,7 @@
             ctx.clearRect(0, 0, 300, 300);
 
             for (let i = 0; i < numOptions; i++) {
-                const angle = startAngle + i * arcSize;
+                const angle = i * arcSize;
                 ctx.beginPath();
                 ctx.fillStyle = colors[i % colors.length];
                 ctx.moveTo(150, 150);
@@ -583,40 +563,30 @@
         function spinWheel() {
             if (isSpinning) return;
             isSpinning = true;
-            
+
             document.getElementById("standName").innerText = "GIRANDO LA RUEDA...";
             document.getElementById("standPower").innerText = "Buscando tu destino en SBR...";
-            
-            let speed = Math.random() * 0.2 + 0.3;
-            let currentRotation = 0;
-            const spinDuration = Math.PI * 10 + Math.random() * Math.PI * 4;
-            let lastTick = 0;
 
-            function animate() {
-                currentRotation += speed;
-                speed *= 0.985;
-                startAngle += speed;
-                drawWheel();
-                
-                if (currentRotation - lastTick > 0.25) {
-                    playSpinSound();
-                    lastTick = currentRotation;
-                }
+            // Generar giros aleatorios limpios usando CSS transition
+            const randomExtraDeg = Math.floor(Math.random() * 360) + 1800; // Al menos 5 vueltas completas + extra
+            currentDeg += randomExtraDeg;
 
-                if (currentRotation < spinDuration) {
-                    requestAnimationFrame(animate);
-                } else {
-                    // Selección segura y directa basada en un índice aleatorio garantizado
-                    const randomIndex = Math.floor(Math.random() * stands.length);
-                    
-                    document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[randomIndex].name;
-                    document.getElementById("standPower").innerText = stands[randomIndex].power;
-                    
-                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-                    isSpinning = false;
-                }
-            }
-            animate();
+            canvas.style.transition = "transform 3s cubic-bezier(0.15, 0.85, 0.15, 1)";
+            canvas.style.transform = `rotate(${currentDeg}deg)`;
+
+            setTimeout(() => {
+                // Calcular exactamente qué premio salió basado en los grados finales
+                const actualDeg = currentDeg % 360;
+                const sliceDegree = 360 / stands.length;
+                // Ajustar al puntero superior
+                const winningIndex = Math.floor((360 - (actualDeg % 360)) / sliceDegree) % stands.length;
+
+                document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[winningIndex].name;
+                document.getElementById("standPower").innerText = stands[winningIndex].power;
+
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                isSpinning = false;
+            }, 3000);
         }
 
         // Velas
