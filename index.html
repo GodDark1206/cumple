@@ -589,7 +589,7 @@
             
             let speed = Math.random() * 0.2 + 0.3;
             let currentRotation = 0;
-            const spinDuration = Math.PI * 12 + Math.random() * Math.PI * 2;
+            const spinDuration = Math.PI * 10 + Math.random() * Math.PI * 4;
             let lastTick = 0;
 
             function animate() {
@@ -606,16 +606,14 @@
                 if (currentRotation < spinDuration) {
                     requestAnimationFrame(animate);
                 } else {
-                    // Cálculo matemático exacto para el puntero superior
-                    const degrees = (startAngle * 180 / Math.PI) % 360;
-                    const sliceDegree = 360 / stands.length;
-                    const index = Math.floor((360 - (degrees % 360)) / sliceDegree) % stands.length;
+                    // Selección segura y directa basada en un índice aleatorio garantizado
+                    const randomIndex = Math.floor(Math.random() * stands.length);
                     
-                    document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[index].name;
-                    document.getElementById("standPower").innerText = stands[index].power;
+                    document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[randomIndex].name;
+                    document.getElementById("standPower").innerText = stands[randomIndex].power;
                     
                     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
-                    isSpinning = false; // Se libera para permitir más giros
+                    isSpinning = false;
                 }
             }
             animate();
