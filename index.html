@@ -33,7 +33,7 @@
             color: #f3e5ab;
             font-family: 'Montserrat', sans-serif;
             min-height: 100vh;
-            padding: 20px;
+            padding: 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -45,22 +45,31 @@
             width: 100%;
             max-width: 850px;
             background: var(--paper-bg);
-            border: 12px double var(--paper-border);
+            border: 8px double var(--paper-border);
             border-radius: 8px;
-            padding: 25px;
+            padding: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.8), inset 0 0 80px rgba(139, 69, 19, 0.4);
             color: var(--text-dark);
             text-align: center;
             position: relative;
-            margin-bottom: 30px;
-            transform: rotate(-0.5deg);
+            margin-bottom: 25px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        @media (min-width: 600px) {
+            .poster-container {
+                border-width: 12px;
+                padding: 25px;
+                transform: rotate(-0.5deg);
+            }
         }
 
         .poster-header {
             font-family: 'Rye', cursive;
-            font-size: 1.2rem;
-            letter-spacing: 4px;
-            border-bottom: 3px solid var(--text-dark);
+            font-size: clamp(0.75rem, 3vw, 1.2rem);
+            letter-spacing: 2px;
+            border-bottom: 2px solid var(--text-dark);
             padding-bottom: 5px;
             margin-bottom: 10px;
             display: flex;
@@ -70,18 +79,20 @@
         .poster-main-title {
             font-family: 'Playfair Display', serif;
             font-weight: 900;
-            font-size: 3rem;
+            font-size: clamp(1.4rem, 6.5vw, 3rem);
             color: var(--sbr-red);
-            text-shadow: 2px 2px 0px #f3e5ab, 4px 4px 0px var(--text-dark);
+            text-shadow: 1px 1px 0px #f3e5ab, 2px 2px 0px var(--text-dark);
             text-transform: uppercase;
-            line-height: 1.1;
+            line-height: 1.15;
             margin: 10px 0;
+            word-break: break-word;
+            hyphens: auto;
         }
 
         .sbr-box {
             background: var(--sbr-blue);
             color: #fff;
-            padding: 15px;
+            padding: 12px;
             border: 3px solid var(--gold);
             margin: 15px 0;
             position: relative;
@@ -90,16 +101,16 @@
 
         .sbr-box-title {
             font-family: 'Rye', cursive;
-            font-size: 2.2rem;
+            font-size: clamp(1.3rem, 5vw, 2.2rem);
             color: var(--gold);
             text-shadow: 2px 2px 0 #000;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
 
         .poster-sub {
             font-family: 'Playfair Display', serif;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: clamp(0.85rem, 3vw, 1.1rem);
             border-top: 2px dashed var(--text-dark);
             border-bottom: 2px dashed var(--text-dark);
             padding: 8px 0;
@@ -109,10 +120,13 @@
 
         .horses-strip {
             display: flex;
+            flex-wrap: wrap;
             justify-content: space-around;
+            gap: 8px;
             margin-top: 15px;
-            font-size: 1.5rem;
+            font-size: clamp(0.9rem, 3.5vw, 1.3rem);
             opacity: 0.85;
+            font-weight: 600;
         }
 
         /* Sección del Pastel & Hamster */
@@ -134,7 +148,7 @@
             padding: 20px;
             text-align: center;
             flex: 1;
-            min-width: 280px;
+            min-width: 260px;
             box-shadow: 0 8px 20px rgba(0,0,0,0.6);
         }
 
@@ -205,7 +219,8 @@
             border-radius: 15px;
             padding: 15px;
             text-align: center;
-            width: 240px;
+            width: 100%;
+            max-width: 260px;
             cursor: pointer;
             transition: transform 0.2s;
             display: flex;
@@ -236,7 +251,7 @@
             background: rgba(20, 10, 5, 0.9);
             border: 3px solid var(--gold);
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px 15px;
             text-align: center;
             margin-bottom: 30px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.7);
@@ -244,14 +259,21 @@
 
         .roulette-container {
             position: relative;
-            width: 300px;
-            height: 300px;
+            width: 280px;
+            height: 280px;
             margin: 20px auto;
         }
 
+        @media (min-width: 400px) {
+            .roulette-container {
+                width: 300px;
+                height: 300px;
+            }
+        }
+
         canvas#wheel {
-            width: 300px;
-            height: 300px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             box-shadow: 0 0 20px var(--gold);
         }
@@ -273,13 +295,14 @@
             background: linear-gradient(180deg, #dfa837, #b8860b);
             color: #000;
             font-family: 'Rye', cursive;
-            font-size: 1.1rem;
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
             padding: 12px 25px;
             border: 2px solid #fff;
             border-radius: 25px;
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(0,0,0,0.5);
             transition: all 0.2s;
+            max-width: 100%;
         }
 
         .btn-western:hover {
@@ -290,7 +313,7 @@
         /* Mural de Galería WANTED con Frases */
         .mural-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 20px;
             width: 100%;
             max-width: 850px;
@@ -306,7 +329,12 @@
             text-align: center;
             box-shadow: 0 6px 15px rgba(0,0,0,0.5);
             position: relative;
-            transform: rotate(calc(-2deg + 4deg * var(--r, 0.5)));
+        }
+
+        @media (min-width: 600px) {
+            .wanted-card {
+                transform: rotate(calc(-2deg + 4deg * var(--r, 0.5)));
+            }
         }
 
         .wanted-title {
@@ -357,15 +385,15 @@
     <div class="poster-container">
         <div class="poster-header">
             <span>1890</span>
-            <span>24 DE OCTUBRE</span>
+            <span>24 OCT</span>
             <span>1890</span>
         </div>
-        <h2 style="font-family:'Rye'; font-size: 1.3rem;">¡GRAN EVENTO CELEBRACIÓN!</h2>
+        <h2 style="font-family:'Rye'; font-size: clamp(0.9rem, 3.5vw, 1.3rem);">¡GRAN EVENTO CELEBRACIÓN!</h2>
         <h1 class="poster-main-title">¡FELIZ CUMPLEAÑOS VÍCTOR SÁNCHEZ!</h1>
         
         <div class="sbr-box">
             <div class="sbr-box-title">STEEL BALL RUN 17</div>
-            <p style="font-size: 0.9rem; letter-spacing: 1px; margin-top: 5px;">
+            <p style="font-size: clamp(0.75rem, 2.5vw, 0.9rem); letter-spacing: 0.5px; margin-top: 5px;">
                 ¡DE LOS 16 A LOS 17 AÑOS A TRAVÉS DE LA ROTACIÓN INFINITA!
             </p>
         </div>
@@ -375,9 +403,9 @@
         </div>
 
         <div class="horses-strip">
-            <span>🐎 GYRO ZEPPELI</span>
-            <span>⭐ JOHNNY JOESTAR</span>
-            <span>🦖 DIEGO BRANDO</span>
+            <span>🐎 GYRO</span>
+            <span>⭐ JOHNNY</span>
+            <span>🦖 DIEGO</span>
         </div>
     </div>
 
@@ -399,37 +427,22 @@
             </button>
         </div>
 
-        <!-- Hámster Meme (Representación Vectorial Exacta) -->
+        <!-- Hámster Meme -->
         <div class="hamster-box" onclick="clickHamster()">
             <div class="hamster-speech" id="hamsterQuote">¡NYO-HO! Toca para risa de Gyro</div>
-            <svg width="150" height="150" viewBox="0 0 200 220" style="background: white; border-radius: 10px;">
-                <!-- Cabeza/Cuerpo Triangular -->
+            <svg width="140" height="140" viewBox="0 0 200 220" style="background: white; border-radius: 10px; max-width: 100%;">
                 <path d="M 100,25 C 130,25 155,70 185,190 C 185,200 155,205 100,205 C 45,205 15,200 15,190 C 45,70 70,25 100,25 Z" fill="#ffffff" stroke="#000000" stroke-width="3" stroke-linejoin="round"/>
-                
-                <!-- Ojos arqueados -->
                 <path d="M 72,82 C 78,70 88,72 92,82" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round"/>
                 <path d="M 108,82 C 112,72 122,70 128,82" fill="none" stroke="#000000" stroke-width="3.5" stroke-linecap="round"/>
                 <circle cx="82" cy="79" r="1.5" fill="#000"/>
                 <circle cx="118" cy="79" r="1.5" fill="#000"/>
-
-                <!-- Nariz Rosa -->
                 <ellipse cx="100" cy="98" rx="8" ry="6" fill="#ff99bb" stroke="#000000" stroke-width="1.5"/>
-
-                <!-- Líneas de mejillas -->
                 <path d="M 64,102 C 69,110 74,112 80,112" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round"/>
                 <path d="M 136,102 C 131,110 126,112 120,112" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round"/>
-
-                <!-- Boca Abierta -->
                 <path d="M 75,116 C 100,113 100,113 125,116 C 138,155 125,182 100,182 C 75,182 62,155 75,116 Z" fill="#000000" stroke="#000000" stroke-width="2"/>
-                
-                <!-- Lengua / Borde Rosa -->
                 <path d="M 82,170 C 100,183 118,170 118,170 C 118,170 100,180 82,170 Z" fill="#ff80ab"/>
-
-                <!-- Dientes de Paleta -->
                 <rect x="92" y="116" width="7" height="15" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
                 <rect x="101" y="116" width="7" height="15" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
-
-                <!-- Patitas abajo -->
                 <path d="M 70,201 C 70,195 78,195 76,201" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round"/>
                 <path d="M 130,201 C 130,195 122,195 124,201" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round"/>
             </svg>
@@ -438,8 +451,8 @@
 
     <!-- RULETA DE STANDS -->
     <div class="roulette-section">
-        <h2 style="font-family: 'Rye'; color: var(--gold); font-size: 1.8rem;">🔮 RUEDA DE STANDS PARA LOS 17</h2>
-        <p style="margin-bottom: 15px; color: #ccc;">¿Qué Stand acompañará a Víctor Sánchez en sus 17 años?</p>
+        <h2 style="font-family: 'Rye'; color: var(--gold); font-size: clamp(1.2rem, 4vw, 1.8rem);">🔮 RUEDA DE STANDS PARA LOS 17</h2>
+        <p style="margin-bottom: 15px; color: #ccc; font-size: 0.9rem;">¿Qué Stand acompañará a Víctor Sánchez en sus 17 años?</p>
         
         <div class="roulette-container">
             <div class="pointer"></div>
@@ -449,18 +462,17 @@
         <button class="btn-western" onclick="spinWheel()">🌀 GIRA LA RUEDA</button>
 
         <div class="stand-result" id="standResult">
-            <h3 id="standName" style="font-family: 'Rye'; color: var(--gold); font-size: 1.5rem;"></h3>
-            <p id="standPower" style="font-style: italic; margin-top: 5px;"></p>
+            <h3 id="standName" style="font-family: 'Rye'; color: var(--gold); font-size: clamp(1.1rem, 3.5vw, 1.5rem);"></h3>
+            <p id="standPower" style="font-style: italic; margin-top: 5px; font-size: 0.9rem;"></p>
         </div>
     </div>
 
     <!-- MURAL VINTAGE CON FRASES Y PERSONAJES -->
-    <h2 style="font-family: 'Rye'; color: var(--gold); margin-bottom: 20px; font-size: 2rem; text-shadow: 2px 2px #000;">
+    <h2 style="font-family: 'Rye'; color: var(--gold); margin-bottom: 20px; font-size: clamp(1.4rem, 4.5vw, 2rem); text-shadow: 2px 2px #000; text-align: center;">
         📜 MURAL DE FELICITACIONES SBR
     </h2>
 
     <div class="mural-grid">
-        <!-- GYRO -->
         <div class="wanted-card" style="--r: 0.2;">
             <div class="wanted-title">WANTED</div>
             <div class="wanted-avatar" style="background-image: url('https://images.fineartamerica.com/images/rendered/square-product/small/images/artworkimages/mediumlarge/3/gyro-zeppeli-steel-ball-run-jojo-steven-p.jpg'); background-size: cover;">
@@ -471,7 +483,6 @@
             </div>
         </div>
 
-        <!-- JOHNNY -->
         <div class="wanted-card" style="--r: 0.8;">
             <div class="wanted-title">WANTED</div>
             <div class="wanted-avatar" style="background-image: url('https://w0.peakpx.com/wallpaper/328/407/HD-wallpaper-johnny-joestar-jojo-sbr-steel-ball-run.jpg'); background-size: cover;">
@@ -482,7 +493,6 @@
             </div>
         </div>
 
-        <!-- FUNNY VALENTINE -->
         <div class="wanted-card" style="--r: 0.4;">
             <div class="wanted-title">WANTED</div>
             <div class="wanted-avatar" style="background-image: url('https://w0.peakpx.com/wallpaper/705/115/HD-wallpaper-funny-valentine-steel-ball-run-jojo.jpg'); background-size: cover;">
@@ -493,7 +503,6 @@
             </div>
         </div>
 
-        <!-- DIEGO BRANDO -->
         <div class="wanted-card" style="--r: 0.6;">
             <div class="wanted-title">WANTED</div>
             <div class="wanted-avatar" style="background-image: url('https://w0.peakpx.com/wallpaper/938/382/HD-wallpaper-diego-brando-sbr-jojo.jpg'); background-size: cover;">
@@ -506,7 +515,7 @@
     </div>
 
     <script>
-        // Sonidos Web Audio API
+        // Sonido de ruleta corregido (clic rápido que se apaga automáticamente)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSpinSound() {
@@ -514,17 +523,19 @@
             const osc = audioCtx.createOscillator();
             const gain = audioCtx.createGain();
             osc.type = 'triangle';
-            osc.frequency.setValueAtTime(300, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.1);
-            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
+            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.05);
+            
+            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+            gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+            
             osc.connect(gain);
             gain.connect(audioCtx.destination);
             osc.start();
-            osc.stop(audioCtx.currentTime + 0.1);
+            osc.stop(audioCtx.currentTime + 0.05);
         }
 
-        // Ruleta
+        // Ruleta de Stands
         const stands = [
             { name: "TUSK ACT 4", power: "Habilidad: Rotación Infinita que atraviesa dimensiones. ¡Nada te detendrá a los 17!" },
             { name: "BALL BREAKER", power: "Habilidad: Dominio de la Técnica Zeppeli. Rompe cualquier obstáculo en tu camino." },
@@ -572,6 +583,7 @@
             let speed = Math.random() * 0.3 + 0.4;
             let currentRotation = 0;
             const totalRotation = Math.PI * 10 + Math.random() * Math.PI * 2;
+            let lastTick = 0;
 
             function animate() {
                 if (currentRotation < totalRotation) {
@@ -579,7 +591,12 @@
                     speed *= 0.98;
                     startAngle += speed;
                     drawWheel();
-                    if (Math.random() < 0.3) playSpinSound();
+                    
+                    if (currentRotation - lastTick > 0.25) {
+                        playSpinSound();
+                        lastTick = currentRotation;
+                    }
+
                     requestAnimationFrame(animate);
                 } else {
                     isSpinning = false;
