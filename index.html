@@ -368,7 +368,7 @@
         }
 
         .stand-result {
-            display: none; /* Se mostrará con JS */
+            display: none;
             background: rgba(223, 168, 55, 0.15);
             border: 2px solid var(--gold);
             padding: 15px;
@@ -518,20 +518,24 @@
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSpinSound() {
-            if (audioCtx.state === 'suspended') audioCtx.resume();
-            const osc = audioCtx.createOscillator();
-            const gain = audioCtx.createGain();
-            osc.type = 'triangle';
-            osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-            osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.05);
-            
-            gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-            gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-            
-            osc.connect(gain);
-            gain.connect(audioCtx.destination);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.05);
+            try {
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.05);
+                
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.05);
+            } catch (e) {
+                // Evita que falle el audio en móviles con restricciones
+            }
         }
 
         const stands = [
@@ -577,7 +581,6 @@
             if (isSpinning) return;
             isSpinning = true;
             
-            // Ocultar resultado anterior y limpiar textos por si vuelve a girar
             const resultBox = document.getElementById("standResult");
             resultBox.style.display = "none";
             document.getElementById("standName").innerText = "";
@@ -589,29 +592,42 @@
             let lastTick = 0;
 
             function animate() {
-                if (currentRotation < totalRotation) {
-                    currentRotation += speed;
-                    speed *= 0.98;
-                    startAngle += speed;
-                    drawWheel();
-                    
-                    if (currentRotation - lastTick > 0.25) {
-                        playSpinSound();
-                        lastTick = currentRotation;
-                    }
+                try {
+                    if (currentRotation < totalRotation) {
+                        currentRotation += speed;
+                        speed *= 0.98;
+                        startAngle += speed;
+                        drawWheel();
+                        
+                        if (currentRotation - lastTick > 0.25) {
+                            playSpinSound();
+                            lastTick = currentRotation;
+                        }
 
-                    requestAnimationFrame(animate);
-                } else {
+                        requestAnimationFrame(animate);
+                    } else {
+                        isSpinning = false;
+                        
+                        // Cálculo ultra seguro del índice
+                        const normalizedAngle = (startAngle * 180 / Math.PI) % 360;
+                        const winningAngle = (360 - (normalizedAngle % 360)) % 360;
+                        const sliceSize = 360 / stands.length;
+                        const index = Math.floor(winningAngle / sliceSize) % stands.length;
+                        
+                        document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[index].name;
+                        document.getElementById("standPower").innerText = stands[index].power;
+                        
+                        // Forzar visualización inmediata
+                        resultBox.style.display = "block";
+                        
+                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                    }
+                } catch (err) {
                     isSpinning = false;
-                    const degrees = (startAngle * 180 / Math.PI) % 360;
-                    const index = Math.floor((360 - degrees) / (360 / stands.length)) % stands.length;
-                    
-                    // Asignar texto y forzar visualización con display block
-                    document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[index].name;
-                    document.getElementById("standPower").innerText = stands[index].power;
+                    // Plan B garantizado por si algo falla
+                    document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[0].name;
+                    document.getElementById("standPower").innerText = stands[0].power;
                     resultBox.style.display = "block";
-                    
-                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
                 }
             }
             animate();
