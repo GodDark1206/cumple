@@ -310,7 +310,21 @@
             background: linear-gradient(180deg, #ffd700, #dfa837);
         }
 
-        /* Mural de Galería WANTED con Frases */
+        /* Tarjeta de resultado siempre visible pero estilizada */
+        .stand-result {
+            background: rgba(223, 168, 55, 0.15);
+            border: 2px solid var(--gold);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Mural */
         .mural-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -365,15 +379,6 @@
             font-style: italic;
             font-size: 0.95rem;
             line-height: 1.3;
-        }
-
-        .stand-result {
-            display: none;
-            background: rgba(223, 168, 55, 0.15);
-            border: 2px solid var(--gold);
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 15px;
         }
 
         audio { display: none; }
@@ -462,8 +467,8 @@
         <button class="btn-western" onclick="spinWheel()">🌀 GIRA LA RUEDA</button>
 
         <div class="stand-result" id="standResult">
-            <h3 id="standName" style="font-family: 'Rye'; color: var(--gold); font-size: clamp(1.1rem, 3.5vw, 1.5rem);"></h3>
-            <p id="standPower" style="font-style: italic; margin-top: 5px; font-size: 0.9rem;"></p>
+            <h3 id="standName" style="font-family: 'Rye'; color: var(--gold); font-size: clamp(1rem, 3vw, 1.3rem);">¡Gira la ruleta para descubrir tu Stand!</h3>
+            <p id="standPower" style="font-style: italic; margin-top: 5px; font-size: 0.85rem; color: #f3e5ab;"></p>
         </div>
     </div>
 
@@ -533,9 +538,7 @@
                 gain.connect(audioCtx.destination);
                 osc.start();
                 osc.stop(audioCtx.currentTime + 0.05);
-            } catch (e) {
-                // Evita que falle el audio en móviles con restricciones
-            }
+            } catch (e) {}
         }
 
         const stands = [
@@ -581,10 +584,9 @@
             if (isSpinning) return;
             isSpinning = true;
             
-            const resultBox = document.getElementById("standResult");
-            resultBox.style.display = "none";
-            document.getElementById("standName").innerText = "";
-            document.getElementById("standPower").innerText = "";
+            // Mostrar texto temporal mientras gira
+            document.getElementById("standName").innerText = "GIRANDO LA RUEDA...";
+            document.getElementById("standPower").innerText = "Buscando tu destino en SBR...";
             
             let speed = Math.random() * 0.3 + 0.4;
             let currentRotation = 0;
@@ -592,42 +594,32 @@
             let lastTick = 0;
 
             function animate() {
-                try {
-                    if (currentRotation < totalRotation) {
-                        currentRotation += speed;
-                        speed *= 0.98;
-                        startAngle += speed;
-                        drawWheel();
-                        
-                        if (currentRotation - lastTick > 0.25) {
-                            playSpinSound();
-                            lastTick = currentRotation;
-                        }
-
-                        requestAnimationFrame(animate);
-                    } else {
-                        isSpinning = false;
-                        
-                        // Cálculo ultra seguro del índice
-                        const normalizedAngle = (startAngle * 180 / Math.PI) % 360;
-                        const winningAngle = (360 - (normalizedAngle % 360)) % 360;
-                        const sliceSize = 360 / stands.length;
-                        const index = Math.floor(winningAngle / sliceSize) % stands.length;
-                        
-                        document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[index].name;
-                        document.getElementById("standPower").innerText = stands[index].power;
-                        
-                        // Forzar visualización inmediata
-                        resultBox.style.display = "block";
-                        
-                        confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                if (currentRotation < totalRotation) {
+                    currentRotation += speed;
+                    speed *= 0.98;
+                    startAngle += speed;
+                    drawWheel();
+                    
+                    if (currentRotation - lastTick > 0.25) {
+                        playSpinSound();
+                        lastTick = currentRotation;
                     }
-                } catch (err) {
+
+                    requestAnimationFrame(animate);
+                } else {
                     isSpinning = false;
-                    // Plan B garantizado por si algo falla
-                    document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[0].name;
-                    document.getElementById("standPower").innerText = stands[0].power;
-                    resultBox.style.display = "block";
+                    
+                    // Cálculo seguro del índice
+                    const normalizedAngle = (startAngle * 180 / Math.PI) % 360;
+                    const winningAngle = (360 - (normalizedAngle % 360)) % 360;
+                    const sliceSize = 360 / stands.length;
+                    const index = Math.floor(winningAngle / sliceSize) % stands.length;
+                    
+                    // Asignar el nombre y poder final directamente
+                    document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[index].name;
+                    document.getElementById("standPower").innerText = stands[index].power;
+                    
+                    confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
                 }
             }
             animate();
