@@ -212,7 +212,7 @@
             100% { transform: scale(1.15) rotate(2deg); }
         }
 
-        /* El Hámster Meme Corregido */
+        /* Hámster Meme */
         .hamster-box {
             background: rgba(255, 255, 255, 0.05);
             border: 2px dashed var(--gold);
@@ -368,7 +368,7 @@
         }
 
         .stand-result {
-            display: none;
+            display: none; /* Se mostrará con JS */
             background: rgba(223, 168, 55, 0.15);
             border: 2px solid var(--gold);
             padding: 15px;
@@ -381,7 +381,7 @@
 </head>
 <body>
 
-    <!-- CARTEL PRINCIPAL ESTILO ANUNCIO STEEL BALL RUN DE 1890 -->
+    <!-- CARTEL PRINCIPAL -->
     <div class="poster-container">
         <div class="poster-header">
             <span>1890</span>
@@ -409,7 +409,7 @@
         </div>
     </div>
 
-    <!-- SECCIÓN INTERACTIVA: PASTEL & HAMSTER MEME -->
+    <!-- SECCIÓN INTERACTIVA -->
     <div class="interactive-zone">
         <!-- Pastel con Velas 17 -->
         <div class="cake-card">
@@ -467,7 +467,7 @@
         </div>
     </div>
 
-    <!-- MURAL VINTAGE CON FRASES Y PERSONAJES -->
+    <!-- MURAL -->
     <h2 style="font-family: 'Rye'; color: var(--gold); margin-bottom: 20px; font-size: clamp(1.4rem, 4.5vw, 2rem); text-shadow: 2px 2px #000; text-align: center;">
         📜 MURAL DE FELICITACIONES SBR
     </h2>
@@ -515,7 +515,6 @@
     </div>
 
     <script>
-        // Sonido de ruleta corregido (clic rápido que se apaga automáticamente)
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSpinSound() {
@@ -535,7 +534,6 @@
             osc.stop(audioCtx.currentTime + 0.05);
         }
 
-        // Ruleta de Stands
         const stands = [
             { name: "TUSK ACT 4", power: "Habilidad: Rotación Infinita que atraviesa dimensiones. ¡Nada te detendrá a los 17!" },
             { name: "BALL BREAKER", power: "Habilidad: Dominio de la Técnica Zeppeli. Rompe cualquier obstáculo en tu camino." },
@@ -578,7 +576,12 @@
         function spinWheel() {
             if (isSpinning) return;
             isSpinning = true;
-            document.getElementById("standResult").style.display = "none";
+            
+            // Ocultar resultado anterior y limpiar textos por si vuelve a girar
+            const resultBox = document.getElementById("standResult");
+            resultBox.style.display = "none";
+            document.getElementById("standName").innerText = "";
+            document.getElementById("standPower").innerText = "";
             
             let speed = Math.random() * 0.3 + 0.4;
             let currentRotation = 0;
@@ -603,9 +606,11 @@
                     const degrees = (startAngle * 180 / Math.PI) % 360;
                     const index = Math.floor((360 - degrees) / (360 / stands.length)) % stands.length;
                     
+                    // Asignar texto y forzar visualización con display block
                     document.getElementById("standName").innerText = "✨ TU STAND DE LOS 17: " + stands[index].name;
                     document.getElementById("standPower").innerText = stands[index].power;
-                    document.getElementById("standResult").style.display = "block";
+                    resultBox.style.display = "block";
+                    
                     confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
                 }
             }
